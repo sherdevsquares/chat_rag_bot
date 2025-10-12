@@ -208,6 +208,9 @@ def app_runner():
 
  
   if st.session_state.user_file:
+    tempdir = "temp_dir"
+    os.makedirs(tempdir, exist_ok=True)
+        
     with open(os.path.join ("temp_dir",st.session_state.user_file.name),"wb") as f:
       f.write(st.session_state.user_file.getbuffer())
 
