@@ -17,13 +17,16 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 import os , tempfile
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
+from langchain_openai import ChatOpenAI
 
-
+#load_dotenv()
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+stringparse = StrOutputParser()
 
 ###### Streamlit page configuration #####
 st.set_page_config(
     page_title="Ollama PDF RAG Streamlit UI",
-    page_icon="🎈",
+    page_icon="(y)",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -36,7 +39,8 @@ st.sidebar.subheader(" These details are used to track the chatbots status")
 ####define and initialize the AI model and the embedings
 @st.cache_resource()
 def model_embed():
-  ai_model = ChatOllama(model="gemma3n", temperature=0.2)
+  #ai_model = ChatOllama(model="gpt-oss:20b-cloud", temperature=0.2)
+  ai_model = ChatOpenAI(temperature=0.0, model ="gpt-4o-mini")
   model_embeddings = "mxbai-embed-large:335m"
   return (ai_model, model_embeddings)
 
@@ -249,7 +253,7 @@ def app_runner():
     st.subheader(" Your uploaded PDF:")
     st.write(f"File name: {st.session_state.user_file.name}")
     with st.container(height=600):
-      pdf_viewer(os.path.join ("temp_dir",st.session_state.user_file.name))
+      pdf_viewer(os.path.join ("temp_dir",st.session_state.user_file.name), zoom_level=1.2)
 
     #### Run the pipeline ####
     if st.session_state.user_question is not None:

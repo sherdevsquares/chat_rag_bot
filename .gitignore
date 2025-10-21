@@ -214,3 +214,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# test scripts
+cloud_test.py
+keytest.py
