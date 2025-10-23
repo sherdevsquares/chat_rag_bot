@@ -17,7 +17,7 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 import os , tempfile
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 #load_dotenv()
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
@@ -41,7 +41,8 @@ st.sidebar.subheader(" These details are used to track the chatbots status")
 def model_embed():
   #ai_model = ChatOllama(model="gpt-oss:20b-cloud", temperature=0.2)
   ai_model = ChatOpenAI(temperature=0.0, model ="gpt-4o-mini")
-  model_embeddings = "mxbai-embed-large:335m"
+  # model_embeddings = "mxbai-embed-large:335m" # used for ollama
+  model_embeddings = "text-embedding-3-small"
   return (ai_model, model_embeddings)
 
 ### Create a class to process the user PDF
@@ -57,7 +58,7 @@ class process_pdf():
 
     pdf_vector = Chroma.from_documents(
         documents=chunked,
-        embedding=OllamaEmbeddings(model=self.ai_embeddings),
+        embedding=OpenAIEmbeddings(model=self.ai_embeddings),
         collection_name="pdf_db",
         persist_directory="./pdf_dbs"
     )
